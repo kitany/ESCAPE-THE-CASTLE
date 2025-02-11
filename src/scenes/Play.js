@@ -4,9 +4,10 @@ class Play extends Phaser.Scene {
   }
 
   create() {
+    this.score = 0
     // hide physics body
-    // this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
-    // this.physics.world.debugGraphic.clear()
+    this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
+    this.physics.world.debugGraphic.clear()
 
     // place tile sprite
     this.sky = this.add.tileSprite(0,0, 640, 480, 'sky').setOrigin(0, 0)
@@ -29,7 +30,7 @@ class Play extends Phaser.Scene {
     })
 
     this.time.addEvent({
-      delay: 2500, // every 2.5 second(s)
+      delay: 2300, // every 2.3 second(s)
       callback: this.spawnCupcake,
       callbackScope: this,
       loop: true
@@ -52,19 +53,19 @@ class Play extends Phaser.Scene {
     keyMENU = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M)
 
     // display score
-    // let scoreConfig = {
-    //   fontFamily: 'Courier',
-    //   fontSize: '28px',
-    //   backgroundColor: '#F3B141',
-    //   color: '#843605',
-    //   align: 'right',
-    //   padding: {
-    //   top: 5,
-    //   bottom: 5,
-    //   },
-    //   fixedWidth: 100
-    // }
-    // this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig)
+    const scoreConfig = {
+      fontFamily: 'Courier',
+      fontSize: '28px',
+      backgroundColor: '#FFF1F4',
+      color: '#FF85A2',
+      align: 'right',
+      padding: {
+      top: 5,
+      bottom: 5,
+      },
+      fixedWidth: 100
+    }
+    this.scoreText = this.add.text(borderPadding, borderPadding, this.score, scoreConfig)
 
     // GAME OVER flag
     this.gameOver = false
@@ -196,19 +197,24 @@ class Play extends Phaser.Scene {
 
       this.time.removeAllEvents()
 
-      let gameOverConfig = {
+      const gameOverScreen = this.add.rectangle(0, 0, game.config.width, game.config.height, 0x000000).setOrigin(0, 0)
+      gameOverScreen.alpha = 0.3
+      gameOverScreen.setDepth(5)
+
+      const gameOverConfig = {
         fontFamily: 'Courier',
         fontSize: '28px',
-        backgroundColor: '#F3B141',
-        color: '#843605',
-        align: 'center',
+        backgroundColor: '#FFF1F4',
+        color: '#FF85A2',
+        align: 'right',
         padding: {
-          top: 5,
-          bottom: 5,
+        top: 5,
+        bottom: 5,
         },
-        fixedWidth: 400
       }
-      this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER - Press R to Restart', gameOverConfig).setOrigin(0.5)
+      const gameOverText = this.add.text(game.config.width/4, game.config.height/2,
+        'GAME OVER - Press R to Restart', gameOverConfig).setOrigin(0, 0)
+      gameOverText.setDepth(6)
 
     }
   }
@@ -216,7 +222,7 @@ class Play extends Phaser.Scene {
   handleCollisionHeel(heel, princess) {
     if (!this.gameOver) {
       this.score += heel.points
-      // this.scoreText.text = this.score
+      this.scoreText.text = this.score
 
       heel.destroy()
       this.sound.play('sfx-heel', {volume: 0.3})

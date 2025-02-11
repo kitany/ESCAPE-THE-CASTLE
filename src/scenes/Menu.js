@@ -4,7 +4,6 @@ class Menu extends Phaser.Scene {
   }
 
   init() {
-    this.score = 0
   }
 
   preload() {
@@ -17,6 +16,7 @@ class Menu extends Phaser.Scene {
     this.load.image('clouds', './assets/clouds.png')
     this.load.image('path', './assets/path.png')
     this.load.image('path-rail-front', './assets/path-rail-front.png')
+    this.load.image('menu', './assets/menu.png')
 
     // spritesheets
     this.load.spritesheet('princess', './assets/princess.png', {
@@ -42,6 +42,8 @@ class Menu extends Phaser.Scene {
   }
 
   create() {
+    this.add.tileSprite(0, 0, 640, 480, 'menu').setOrigin(0, 0)
+
     if (!restartState) {
       // animation config
       this.anims.create({
