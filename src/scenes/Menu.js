@@ -22,6 +22,7 @@ class Menu extends Phaser.Scene {
     this.load.image('menu', './assets/menu.png')
     this.load.image('gameover', './assets/gameover.png')
     this.load.image('tutorial', './assets/tutorial.png')
+    this.load.image('credits', './assets/credits.png')
 
     // spritesheets
     this.load.spritesheet('princess', './assets/princess.png', {
@@ -91,12 +92,18 @@ class Menu extends Phaser.Scene {
     keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
     keyRESET = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R)
     keyMENU = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M)
+    keyCREDITS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C)
   }
 
   update() {
     if (Phaser.Input.Keyboard.JustDown(keySPACE)) {
       this.sound.play('select', {volume: 0.2})
       this.scene.start('playScene')
+    }
+
+    if (Phaser.Input.Keyboard.JustDown(keyCREDITS)) {
+      this.sound.play('select', {volume: 0.2})
+      this.scene.start('creditsScene')
     }
   }
 }

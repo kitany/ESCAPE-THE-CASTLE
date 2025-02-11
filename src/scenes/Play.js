@@ -82,6 +82,7 @@ class Play extends Phaser.Scene {
     keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
     keyRESET = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R)
     keyMENU = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M)
+    keyCREDITS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C)
 
     // display score
     this.scoreText = this.add.text(borderPadding, borderPadding, this.score, textConfig)

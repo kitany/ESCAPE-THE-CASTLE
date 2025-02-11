@@ -8,13 +8,13 @@ let config = {
       debug: true
     },
   },
-  scene: [ Menu, Play ],
+  scene: [ Menu, Play, Credits ],
 }
 
 let game = new Phaser.Game(config);
 
 // reserve keyboard bindings
-let keyUP, keyDOWN, keySPACE, keyRESET, keyMENU
+let keyUP, keyDOWN, keySPACE, keyRESET, keyMENU, keyCREDITS
 let restartState = false
 
 // set UI sizes
