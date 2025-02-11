@@ -7,7 +7,7 @@ class Heel extends Phaser.Physics.Arcade.Sprite {
     this.body.setSize(50, 50)
     this.body.setImmovable(true)
 
-    this.moveSpeed = 6
+    this.moveSpeed = scene.gameMoveSpeed
     this.points = pointValue
   }
 

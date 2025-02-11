@@ -4,7 +4,18 @@ class Play extends Phaser.Scene {
   }
 
   create() {
+    // initial values
     this.score = 0
+    this.gameMoveSpeed = 6
+
+    // increase speed
+    this.time.addEvent({
+      delay: 15000, // after 15 second(s)
+      callback: this.changeSpeed,
+      callbackScope: this,
+      loop: false,
+    });
+
     // hide physics body
     this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
     this.physics.world.debugGraphic.clear()
@@ -22,7 +33,7 @@ class Play extends Phaser.Scene {
       delay: 1000, // every 1 second(s)
       callback: this.spawnHeel,
       callbackScope: this,
-      loop: true
+      loop: true,
     });
 
     this.cupcakeGroup = this.add.group({
@@ -33,7 +44,7 @@ class Play extends Phaser.Scene {
       delay: 2300, // every 2.3 second(s)
       callback: this.spawnCupcake,
       callbackScope: this,
-      loop: true
+      loop: true,
     });
 
     this.princess = new Princess(this, 0, 130, 'princess').setOrigin(0, 0)
@@ -100,8 +111,8 @@ class Play extends Phaser.Scene {
     }
 
     this.clouds.tilePositionX += 1
-    this.path.tilePositionX += 6
-    this.pathFront.tilePositionX += 6
+    this.path.tilePositionX += this.gameMoveSpeed
+    this.pathFront.tilePositionX += this.gameMoveSpeed
 
     this.princess.update()
 
@@ -201,17 +212,6 @@ class Play extends Phaser.Scene {
       gameOverCover.alpha = 0.3
       gameOverCover.setDepth(5)
 
-      const gameOverConfig = {
-        fontFamily: 'Courier',
-        fontSize: '28px',
-        backgroundColor: '#FFF1F4',
-        color: '#FF85A2',
-        align: 'right',
-        padding: {
-        top: 5,
-        bottom: 5,
-        },
-      }
       const gameOverScreen = this.add.tileSprite(0,0, 640, 480, 'gameover').setOrigin(0, 0)
       gameOverScreen.setDepth(6)
     }
@@ -225,5 +225,9 @@ class Play extends Phaser.Scene {
       heel.destroy()
       this.sound.play('sfx-heel', {volume: 0.3})
     }
+  }
+
+  changeSpeed() {
+    this.gameMoveSpeed = 9
   }
 }
