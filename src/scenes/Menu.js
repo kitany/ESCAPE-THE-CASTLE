@@ -18,6 +18,7 @@ class Menu extends Phaser.Scene {
     this.load.image('path-rail-front', './assets/path-rail-front.png')
     this.load.image('menu', './assets/menu.png')
     this.load.image('gameover', './assets/gameover.png')
+    this.load.image('tutorial', './assets/tutorial.png')
 
     // spritesheets
     this.load.spritesheet('princess', './assets/princess.png', {

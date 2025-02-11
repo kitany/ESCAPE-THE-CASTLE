@@ -51,33 +51,22 @@ class Play extends Phaser.Scene {
     this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
     this.physics.world.debugGraphic.clear()
 
-    // place tile sprite
+    // place background tile sprites
     this.sky = this.add.tileSprite(0,0, 640, 480, 'sky').setOrigin(0, 0)
     this.clouds = this.add.tileSprite(0, 35, 2560, 480, 'clouds').setOrigin(0, 0).setScale(0.5)
     this.path = this.add.tileSprite(0, 150, 1280, 480, 'path').setOrigin(0, 0).setScale(0.75)
 
+    // point object
     this.heelGroup = this.add.group({
       runChildUpdate: true,
     })
 
-    this.time.addEvent({
-      delay: 1000, // every 1 second(s)
-      callback: this.spawnHeel,
-      callbackScope: this,
-      loop: true,
-    });
-
+    // enemy object
     this.cupcakeGroup = this.add.group({
       runChildUpdate: true,
     })
 
-    this.time.addEvent({
-      delay: 2300, // every 2.3 second(s)
-      callback: this.spawnCupcake,
-      callbackScope: this,
-      loop: true,
-    });
-
+    // princess (player) sprite
     this.princess = new Princess(this, 0, 130, 'princess').setOrigin(0, 0)
     this.princess.play('princess-run')
 
@@ -100,6 +89,12 @@ class Play extends Phaser.Scene {
     // GAME OVER flag
     this.gameOver = false
 
+    // TUTORIAL flag
+    this.tutorialScreen = true
+    this.createTutorialScreen()
+    this.physics.pause()
+
+    // bgm
     this.bgm = this.sound.add('fairytale-bgm', {
       volume: 0.1,
       loop: true,
@@ -109,13 +104,20 @@ class Play extends Phaser.Scene {
       this.bgm.play();
     }
 
+    // depth settings
     this.path.setDepth(0)
     this.pathFront.setDepth(3)
     this.princess.setDepth(2)
   }
 
   update() {
-    // check key input for restart
+    if (this.tutorialScreen) {
+      if (Phaser.Input.Keyboard.JustDown(keySPACE)) {
+        this.startGame()
+      }
+    }
+
+    // check key input for restart or menu
     if(this.gameOver) {
       if (Phaser.Input.Keyboard.JustDown(keyRESET)) {
         this.bgm.stop()
@@ -149,6 +151,46 @@ class Play extends Phaser.Scene {
         cupcake.destroy()
       }
     });
+  }
+
+  createTutorialScreen() {
+    this.tutorialScreenOverlay = this.add.tileSprite(0,0, 640, 480, 'tutorial').setOrigin(0, 0)
+    this.tutorialScreenOverlay.setDepth(6)
+  }
+
+  startGame() {
+    this.tutorialScreen = false
+    this.physics.resume()
+
+    this.tweens.add({
+      targets: [this.tutorialScreenOverlay],
+      alpha: 0,
+      duration: 500,
+      onComplete: () => {
+        this.tutorialScreenOverlay.destroy()
+
+        this.time.addEvent({
+          delay: 1000,
+          callback: this.spawnHeel,
+          callbackScope: this,
+          loop: true,
+        })
+
+        this.time.addEvent({
+          delay: 2300,
+          callback: this.spawnCupcake,
+          callbackScope: this,
+          loop: true,
+        })
+
+        this.time.addEvent({
+          delay: 15000,
+          callback: this.changeSpeed,
+          callbackScope: this,
+          loop: false,
+        })
+      }
+    })
   }
 
  spawnCupcake() {
