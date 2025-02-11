@@ -197,9 +197,9 @@ class Play extends Phaser.Scene {
 
       this.time.removeAllEvents()
 
-      const gameOverScreen = this.add.rectangle(0, 0, game.config.width, game.config.height, 0x000000).setOrigin(0, 0)
-      gameOverScreen.alpha = 0.3
-      gameOverScreen.setDepth(5)
+      const gameOverCover = this.add.rectangle(0, 0, game.config.width, game.config.height, 0x000000).setOrigin(0, 0)
+      gameOverCover.alpha = 0.3
+      gameOverCover.setDepth(5)
 
       const gameOverConfig = {
         fontFamily: 'Courier',
@@ -212,10 +212,8 @@ class Play extends Phaser.Scene {
         bottom: 5,
         },
       }
-      const gameOverText = this.add.text(game.config.width/4, game.config.height/2,
-        'GAME OVER - Press R to Restart', gameOverConfig).setOrigin(0, 0)
-      gameOverText.setDepth(6)
-
+      const gameOverScreen = this.add.tileSprite(0,0, 640, 480, 'gameover').setOrigin(0, 0)
+      gameOverScreen.setDepth(6)
     }
   }
 
