@@ -113,6 +113,7 @@ class Play extends Phaser.Scene {
   update() {
     if (this.tutorialScreen) {
       if (Phaser.Input.Keyboard.JustDown(keySPACE)) {
+        this.sound.play('select', {volume: 0.2})
         this.startGame()
       }
     }
@@ -121,11 +122,13 @@ class Play extends Phaser.Scene {
     if(this.gameOver) {
       if (Phaser.Input.Keyboard.JustDown(keyRESET)) {
         this.bgm.stop()
+        this.sound.play('select', {volume: 0.2})
         this.scene.restart()
       }
       if (Phaser.Input.Keyboard.JustDown(keyMENU)) {
         restartState = true
         this.bgm.stop()
+        this.sound.play('select', {volume: 0.2})
         this.scene.start('menuScene')
       }
       return;
@@ -138,6 +141,10 @@ class Play extends Phaser.Scene {
     this.pathFront.tilePositionX += this.gameMoveSpeed
 
     this.princess.update()
+
+    if (this.score % 50 == 0 && this.score != 0   ) {
+      this.sound.play('level-up', {volume: 0.01})
+    }
 
     // clean up objects
     this.heelGroup.children.iterate((heel) => {
@@ -254,6 +261,7 @@ class Play extends Phaser.Scene {
   handleCollisionObstacle(object, princess) {
     if (!this.gameOver) {
       this.gameOver = true
+      this.sound.play('sfx-enemy', {volume: 0.3})
       this.physics.pause()
       this.princess.anims.pause()
 

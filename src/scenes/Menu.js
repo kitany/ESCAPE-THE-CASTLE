@@ -10,6 +10,9 @@ class Menu extends Phaser.Scene {
     // load bgm
     this.load.audio('fairytale-bgm', './assets/fairytale-lullaby.wav')
     this.load.audio('sfx-heel', './assets/shine.mp3')
+    this.load.audio('sfx-enemy', './assets/enemy-sfx.wav')
+    this.load.audio('select', './assets/select.ogg')
+    this.load.audio('level-up', './assets/level-up.wav')
 
     // load images/tile sprites
     this.load.image('sky', './assets/sky.png')
@@ -92,6 +95,7 @@ class Menu extends Phaser.Scene {
 
   update() {
     if (Phaser.Input.Keyboard.JustDown(keySPACE)) {
+      this.sound.play('select', {volume: 0.2})
       this.scene.start('playScene')
     }
   }
