@@ -4,9 +4,40 @@ class Play extends Phaser.Scene {
   }
 
   create() {
+    const textConfig = {
+      fontFamily: 'Courier',
+      fontSize: '28px',
+      backgroundColor: '#FFF1F4',
+      color: '#FF85A2',
+      align: 'right',
+      padding: {
+      top: 5,
+      bottom: 5,
+      },
+      fixedWidth: 100
+    }
+
+    const clockConfig = {
+      fontFamily: 'Courier',
+      fontSize: '28px',
+      backgroundColor: '#FFF1F4',
+      color: '#FF85A2',
+      align: 'center',
+      padding: {
+      top: 5,
+      bottom: 5,
+      },
+      fixedWidth: 100
+    }
+
     // initial values
     this.score = 0
     this.gameMoveSpeed = 6
+
+    // clock variables
+    this.currentTime = 0
+    this.timerVisual = this.add.text(game.config.width / 2 - 40, borderPadding , this.formatTime(this.currentTime), clockConfig)
+    this.timerVisual.setDepth(4)
 
     // increase speed
     this.time.addEvent({
@@ -64,19 +95,7 @@ class Play extends Phaser.Scene {
     keyMENU = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M)
 
     // display score
-    const scoreConfig = {
-      fontFamily: 'Courier',
-      fontSize: '28px',
-      backgroundColor: '#FFF1F4',
-      color: '#FF85A2',
-      align: 'right',
-      padding: {
-      top: 5,
-      bottom: 5,
-      },
-      fixedWidth: 100
-    }
-    this.scoreText = this.add.text(borderPadding, borderPadding, this.score, scoreConfig)
+    this.scoreText = this.add.text(borderPadding, borderPadding, this.score, textConfig)
 
     // GAME OVER flag
     this.gameOver = false
@@ -109,6 +128,8 @@ class Play extends Phaser.Scene {
       }
       return;
     }
+
+    this.updateTime()
 
     this.clouds.tilePositionX += 1
     this.path.tilePositionX += this.gameMoveSpeed
@@ -229,5 +250,17 @@ class Play extends Phaser.Scene {
 
   changeSpeed() {
     this.gameMoveSpeed = 9
+  }
+
+  formatTime(ms) {
+    let s = ms / 1000
+    let min = Math.floor(s / 60)
+    let sec = Math.floor(s % 60)
+    return `${min}:${sec.toString().padStart(2, '0')}`
+  }
+
+  updateTime() {
+    this.currentTime += this.game.loop.delta
+    this.timerVisual.text = this.formatTime(this.currentTime)
   }
 }
