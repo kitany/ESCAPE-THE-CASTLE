@@ -4,8 +4,8 @@ class Princess extends Phaser.Physics.Arcade.Sprite {
 
     scene.add.existing(this)
     scene.physics.add.existing(this)
-    this.body.setSize(60, 60)
-    this.body.setOffset(120, 90)
+    this.body.setSize(70, 40)
+    this.body.setOffset(120, 100)
     this.body.setImmovable(true)
 
     this.moveSpeed = 3

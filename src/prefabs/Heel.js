@@ -5,7 +5,7 @@ class Heel extends Phaser.Physics.Arcade.Sprite {
 
     scene.add.existing(this)
     scene.physics.add.existing(this)
-    this.body.setSize(80, 80)
+    this.body.setSize(50, 50)
     this.body.setImmovable(true)
 
     this.moveSpeed = 6
@@ -13,17 +13,7 @@ class Heel extends Phaser.Physics.Arcade.Sprite {
   }
 
   update() {
-    // move spaceship left
+    // move heel left
     this.x -= this.moveSpeed
-
-    // wrap from left to right edge
-    if(this.x <= 0 - this.width) {
-      this.x = game.config.width
-    }
-  }
-
-  // reset position
-  reset() {
-    this.x = game.config.width
   }
 }
