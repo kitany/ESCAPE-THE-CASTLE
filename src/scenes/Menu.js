@@ -32,37 +32,58 @@ class Menu extends Phaser.Scene {
       startFrame: 0,
       endFrame: 1,
     })
+
+    this.load.spritesheet('cupcake', './assets/cupcake.png', {
+      frameWidth: 130,
+      frameHeight: 130,
+      startFrame: 0,
+      endFrame: 1,
+    })
   }
 
   create() {
-    // animation config
-    this.anims.create({
-      key: 'princess-run',
-      frames: this.anims.generateFrameNumbers('princess', { 
-          start: 0, 
-          end: 2, 
-          first: 0
-      }),
-      frameRate: 6,
-      repeat: -1,
-   })
+    if (!restartState) {
+      // animation config
+      this.anims.create({
+        key: 'princess-run',
+        frames: this.anims.generateFrameNumbers('princess', { 
+            start: 0, 
+            end: 2, 
+            first: 0
+        }),
+        frameRate: 6,
+        repeat: -1,
+      })
 
-   this.anims.create({
-    key: 'heel-anim',
-    frames: this.anims.generateFrameNumbers('heel', { 
-        start: 0, 
-        end: 1, 
-        first: 0
-    }),
-    frameRate: 3,
-    repeat: -1,
-  })
+      this.anims.create({
+        key: 'heel-anim',
+        frames: this.anims.generateFrameNumbers('heel', { 
+            start: 0, 
+            end: 1, 
+            first: 0
+        }),
+        frameRate: 3,
+        repeat: -1,
+      })
+
+      this.anims.create({
+        key: 'cupcake-anim',
+        frames: this.anims.generateFrameNumbers('cupcake', { 
+            start: 0, 
+            end: 1, 
+            first: 0
+        }),
+        frameRate: 3,
+        repeat: -1,
+      })
+    }
 
     // define keys
     keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP)
     keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN)
     keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
     keyRESET = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R)
+    keyMENU = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M)
   }
 
   update() {

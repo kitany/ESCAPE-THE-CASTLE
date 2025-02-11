@@ -1,5 +1,5 @@
-class Heel extends Phaser.Physics.Arcade.Sprite {
-  constructor(scene, x, y, texture, frame, pointValue) {
+class Cupcake extends Phaser.Physics.Arcade.Sprite {
+  constructor(scene, x, y, texture, frame) {
     super(scene, x, y, texture, frame)
 
     scene.add.existing(this)
@@ -8,13 +8,12 @@ class Heel extends Phaser.Physics.Arcade.Sprite {
     this.body.setImmovable(true)
 
     this.moveSpeed = 6
-    this.points = pointValue
   }
 
   update() {
     if (!this.scene.gameOver) {
-      // move heel left
-      this.x -= this.moveSpeed 
+      // move cupcake left
+      this.x -= this.moveSpeed
     }
   }
 }

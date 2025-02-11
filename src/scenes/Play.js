@@ -18,8 +18,19 @@ class Play extends Phaser.Scene {
     })
 
     this.time.addEvent({
-      delay: 1000, // every 2 seconds
+      delay: 1000, // every 1 second(s)
       callback: this.spawnHeel,
+      callbackScope: this,
+      loop: true
+    });
+
+    this.cupcakeGroup = this.add.group({
+      runChildUpdate: true,
+    })
+
+    this.time.addEvent({
+      delay: 2500, // every 2.5 second(s)
+      callback: this.spawnCupcake,
       callbackScope: this,
       loop: true
     });
@@ -30,19 +41,15 @@ class Play extends Phaser.Scene {
     this.pathFront = this.add.tileSprite(0, 150, 1280, 480, 'path-rail-front').setOrigin(0, 0).setScale(0.75)
     
     this.physics.add.existing(this.princess)
-    this.physics.add.collider(this.heelGroup, this.princess, this.handleCollision, null, this)
-
-    // white borders
-    // this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0)
-    // this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0)
-    // this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
-    // this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0)
+    this.physics.add.collider(this.heelGroup, this.princess, this.handleCollisionHeel, null, this)
+    this.physics.add.collider(this.cupcakeGroup, this.princess, this.handleCollisionObstacle, null, this)
 
     // define keys
     keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP)
     keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN)
     keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
     keyRESET = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R)
+    keyMENU = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M)
 
     // display score
     // let scoreConfig = {
@@ -78,8 +85,17 @@ class Play extends Phaser.Scene {
 
   update() {
     // check key input for restart
-    if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyRESET)) {
-      this.scene.restart()
+    if(this.gameOver) {
+      if (Phaser.Input.Keyboard.JustDown(keyRESET)) {
+        this.bgm.stop()
+        this.scene.restart()
+      }
+      if (Phaser.Input.Keyboard.JustDown(keyMENU)) {
+        restartState = true
+        this.bgm.stop()
+        this.scene.start('menuScene')
+      }
+      return;
     }
 
     this.clouds.tilePositionX += 1
@@ -88,12 +104,48 @@ class Play extends Phaser.Scene {
 
     this.princess.update()
 
+    // clean up objects
     this.heelGroup.children.iterate((heel) => {
       if (heel && heel.x < -heel.width) {
         heel.destroy()
       }
     });
+
+    this.cupcakeGroup.children.iterate((cupcake) => {
+      if (cupcake && cupcake.x < -cupcake.width) {
+        cupcake.destroy()
+      }
+    });
   }
+
+ spawnCupcake() {
+    if (this.gameOver) return;
+
+    // random y position
+    const rowNumber = Phaser.Math.Between(1,3)
+    const yPos = rowNumber == 1
+      ? 240 : rowNumber == 2
+        ? 300 : 360
+    
+    const cupcake = new Cupcake(
+      this,
+      game.config.width,
+      yPos,
+      'cupcake',
+      0,
+      10
+    ).setScale(0.75)
+    
+    cupcake.play('cupcake-anim')
+    this.physics.add.existing(cupcake)
+
+    // set depth depending on row
+    rowNumber == 1 ? cupcake.setDepth(1) : rowNumber == 2
+      ? cupcake.setDepth(1) : cupcake.setDepth(2)
+
+    // add to group
+    this.cupcakeGroup.add(cupcake)
+  } 
 
   spawnHeel() {
     if (this.gameOver) return;
@@ -124,7 +176,44 @@ class Play extends Phaser.Scene {
     this.heelGroup.add(heel)
   }
 
-  handleCollision(heel, princess) {
+  handleCollisionObstacle(object, princess) {
+    if (!this.gameOver) {
+      this.gameOver = true
+      this.physics.pause()
+      this.princess.anims.pause()
+
+      this.heelGroup.children.iterate((object) => {
+        object.setVelocityX(0) // stop physics movement
+        object.anims.pause()   // stop animation
+        object.moveSpeed = 0   // stop update movement
+      });
+
+      this.cupcakeGroup.children.iterate((object) => {
+        object.setVelocityX(0) // stop physics movement
+        object.anims.pause()   // stop animation
+        object.moveSpeed = 0   // stop update movement
+      });
+
+      this.time.removeAllEvents()
+
+      let gameOverConfig = {
+        fontFamily: 'Courier',
+        fontSize: '28px',
+        backgroundColor: '#F3B141',
+        color: '#843605',
+        align: 'center',
+        padding: {
+          top: 5,
+          bottom: 5,
+        },
+        fixedWidth: 400
+      }
+      this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER - Press R to Restart', gameOverConfig).setOrigin(0.5)
+
+    }
+  }
+
+  handleCollisionHeel(heel, princess) {
     if (!this.gameOver) {
       this.score += heel.points
       // this.scoreText.text = this.score
@@ -133,5 +222,4 @@ class Play extends Phaser.Scene {
       this.sound.play('sfx-heel', {volume: 0.3})
     }
   }
-
 }
