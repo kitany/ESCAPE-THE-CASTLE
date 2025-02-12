@@ -38,14 +38,7 @@ class Play extends Phaser.Scene {
     this.currentTime = 0
     this.timerVisual = this.add.text(game.config.width / 2 - 40, borderPadding , this.formatTime(this.currentTime), clockConfig)
     this.timerVisual.setDepth(4)
-
-    // increase speed
-    this.time.addEvent({
-      delay: 15000, // after 15 second(s)
-      callback: this.changeSpeed,
-      callbackScope: this,
-      loop: false,
-    });
+    this.timerStart = false
 
     // hide physics body
     this.physics.world.drawDebug = this.physics.world.drawDebug ? false : true
@@ -135,7 +128,9 @@ class Play extends Phaser.Scene {
       return;
     }
 
-    this.updateTime()
+    if (this.timerStart) {
+      this.updateTime()
+    }
 
     this.clouds.tilePositionX += 1
     this.path.tilePositionX += this.gameMoveSpeed
@@ -185,7 +180,7 @@ class Play extends Phaser.Scene {
         })
 
         this.time.addEvent({
-          delay: 2300,
+          delay: 3300,
           callback: this.spawnCupcake,
           callbackScope: this,
           loop: true,
@@ -197,6 +192,8 @@ class Play extends Phaser.Scene {
           callbackScope: this,
           loop: false,
         })
+
+        this.timerStart = true
       }
     })
   }
