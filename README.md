@@ -3,7 +3,7 @@
 ASSIGNMENT FOR CMPM 120\
 Name: Kayla Nguyen\
 Game Title: *ESCAPE THE CASTLE*\
-Project time: 21 hours
+Project time: 23 hours
 
 ### Creative tilt
 
